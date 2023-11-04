@@ -1,9 +1,10 @@
-import './App.css';
+import "./App.css";
+import Headline from "./component/Headline";
 
 function App() {
   return (
-    <div className="App">
-     
+    <div className="container">
+      <Headline />
     </div>
   );
 }
