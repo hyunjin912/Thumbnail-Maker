@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 function Serach({ onSubmit }) {
-  console.log("Search Component");
+  console.log("Search Comp");
   const [input, setInput] = useState("");
 
   const onChange = useCallback((e) => {
@@ -26,7 +26,6 @@ function Serach({ onSubmit }) {
 }
 
 const Wrap = styled.div`
-  background: #fff;
   height: 40px;
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
