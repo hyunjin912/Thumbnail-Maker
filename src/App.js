@@ -1,31 +1,14 @@
 import "./App.css";
-import styled from "styled-components";
-import Headline from "./component/Headline";
-import SearchContainer from "./component/SearchContainer";
-import ColumnContainer from "./component/ColumnContainer";
+import { Routes, Route } from "react-router-dom";
+import Home from "./routes/Home";
 
 function App() {
   console.log("App Comp");
   return (
-    <Container>
-      <Headline />
-      <SearchContainer />
-      <ColumnContainer />
-    </Container>
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
   );
 }
-
-const Container = styled.div`
-  max-width: 1120px;
-  margin: 0 auto;
-
-  @media (max-width: 1200px) {
-    padding: 0 40px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 20px;
-  }
-`;
 
 export default App;

@@ -26,6 +26,8 @@ function Serach({ onSubmit }) {
 }
 
 const Wrap = styled.div`
+  position: sticky;
+  top: 0;
   height: 40px;
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
