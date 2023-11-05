@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
 
 function ColumnItem({ img }) {
@@ -37,7 +37,6 @@ function Column({ image, column }) {
     columns[idx].imgs.push(image[i]);
   }
 
-  console.log(image.length, columns);
   return (
     <Wrap>
       {columns.map((col) => (

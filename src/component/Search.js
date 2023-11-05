@@ -1,21 +1,37 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 function Serach({ onSubmit }) {
   console.log("Search Comp");
   const [input, setInput] = useState("");
+  const query = new URLSearchParams(useLocation().search).get("search");
+  const inputRef = useRef(null);
+  console.log("input - ", input);
 
   const onChange = useCallback((e) => {
-    console.log(e.target.value);
     setInput(e.target.value);
   }, []);
+
+  const onFocus = useCallback((e) => {
+    setInput(e.target.value.trim());
+  }, []);
+
+  useEffect(() => {
+    if (!input && query) {
+      console.log("query - ", query);
+      inputRef.current.value = query;
+    }
+  }, [query]);
 
   return (
     <Wrap>
       <Form onSubmit={onSubmit}>
         <Input
+          ref={inputRef}
           value={input}
           onChange={onChange}
+          onFocus={onFocus}
           type="text"
           placeholder="Search & Enter"
         />

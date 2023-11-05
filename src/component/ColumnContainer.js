@@ -1,16 +1,41 @@
-import { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Column from "./Column";
-// import getImages from "../api";
 
 export default function ColumnContainer() {
   console.log("Col Container Comp");
-  const { image, column } = useSelector((state) => ({
-    image: state.image,
-    column: state.column,
-  }));
+  const image = useSelector((state) => state.image);
+  const column = useSelector((state) => state.column);
 
-  // const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("마운트");
+    let timer = null;
+    let onScroll = null;
+    const throttle = (delay, func) => {
+      onScroll = (e) => {
+        if (!timer) {
+          timer = setTimeout(() => {
+            timer = null;
+            func(e);
+          }, delay);
+        }
+      };
+
+      return onScroll;
+    };
+
+    window.addEventListener(
+      "scroll",
+      throttle(500, () => {
+        console.log("heool");
+      }),
+    );
+
+    return () => {
+      console.log("언 마운트");
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return <Column image={image} column={column} />;
 }
