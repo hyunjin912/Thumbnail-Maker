@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 function Headline() {
   return (
-    <div>
+    <Wrap>
       <Title>
         <span>
           thumbnail
@@ -19,12 +19,20 @@ function Headline() {
         <br />
         이미지와 텍스트를 이용하여 자신만의 커스텀 썸네일을 만들어 보세요.
       </Description>
-    </div>
+    </Wrap>
   );
 }
 
+const Wrap = styled.div`
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 10px;
+  }
+`;
+
 const Title = styled.h1`
-  margin: 40px 0 20px;
+  padding: 40px 0 20px;
   text-transform: uppercase;
   font-size: 80px;
   font-weight: bold;
@@ -39,7 +47,7 @@ const Title = styled.h1`
   }
 
   @media (max-width: 768px) {
-    margin: 20px 0 10px;
+    padding: 20px 0 10px;
     font-size: 45px;
   }
 `;
