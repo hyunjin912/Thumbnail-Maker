@@ -1,4 +1,4 @@
-const initialState = 3;
+const initialState = 2;
 
 export default function column(state = initialState, action) {
   switch (action.type) {

@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Headline from "../component/Headline";
 import SearchContainer from "../component/SearchContainer";
@@ -7,17 +6,9 @@ import ColumnContainer from "../component/ColumnContainer";
 
 function Home() {
   const image = useSelector((state) => state.image);
-  console.log("r", image);
-  const navigate = useNavigate();
+
   return (
     <Container>
-      <button
-        onClick={() => {
-          navigate("thumb");
-        }}
-      >
-        썸브로 가기
-      </button>
       <Headline />
       <SearchContainer />
       {image.length > 0 ? <ColumnContainer /> : null}

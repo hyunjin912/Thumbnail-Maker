@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Search from "./Search";
-import getImages from "../api";
+import { getImages } from "../api";
 
 export default function SearchContainer() {
-  console.log("Search Container Comp");
+  const image = useSelector((state) => state.image);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,13 +14,10 @@ export default function SearchContainer() {
       e.preventDefault();
 
       const [inputEl] = e.target.children;
-      console.log(123, inputEl.value);
       const search = inputEl.value.trim();
       inputEl.blur();
 
       const result = await getImages(search);
-
-      console.log("Search Container Comp - ", result.results);
 
       dispatch({
         type: "ADD_IMAGES",
@@ -32,5 +29,5 @@ export default function SearchContainer() {
     [dispatch],
   );
 
-  return <Search onSubmit={onSubmit} />;
+  return <Search onSubmit={onSubmit} image={image} dispatch={dispatch} />;
 }

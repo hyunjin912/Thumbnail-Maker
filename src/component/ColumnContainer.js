@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import Column from "./Column";
 
 export default function ColumnContainer() {
-  console.log("Col Container Comp");
   const image = useSelector((state) => state.image);
   const column = useSelector((state) => state.column);
 

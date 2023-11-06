@@ -1,15 +1,23 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function ColumnItem({ img }) {
+  const navigate = useNavigate();
   const {
     urls: { regular },
     alt_description,
+    id,
   } = img;
+
+  const onClick = () => {
+    navigate(`thumb/${id}`);
+  };
+
   return (
-    <div>
+    <ColumnItemWrap onClick={onClick}>
       <img src={regular} alt={alt_description} />
-    </div>
+    </ColumnItemWrap>
   );
 }
 
@@ -67,6 +75,10 @@ const ColumnListWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const ColumnItemWrap = styled.div`
+  cursor: pointer;
 `;
 
 export default Column;
