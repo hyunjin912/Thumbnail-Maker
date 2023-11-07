@@ -19,6 +19,7 @@ function Maker() {
       const img = new Image();
       img.src = re.urls.full;
       img.onload = () => {
+        console.log("썸브 로딩 완료");
         setImage({
           src: re.urls.full,
           alt: re.alt_description,

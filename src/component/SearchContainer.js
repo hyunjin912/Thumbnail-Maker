@@ -5,29 +5,27 @@ import Search from "./Search";
 import { getImages } from "../api";
 
 export default function SearchContainer() {
-  const image = useSelector((state) => state.image);
+  const { page, search, data } = useSelector((state) => state.image);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const onSubmit = useCallback(async (e) => {
+    e.preventDefault();
 
-      const [inputEl] = e.target.children;
-      const search = inputEl.value.trim();
-      inputEl.blur();
+    const [inputEl] = e.target.children;
+    const search = inputEl.value.trim();
+    inputEl.blur();
 
-      const result = await getImages(search);
+    const result = await getImages(search);
 
-      dispatch({
-        type: "ADD_IMAGES",
-        images: result.results,
-      });
+    dispatch({
+      type: "ADD_IMAGES",
+      search: search,
+      images: result.results,
+    });
 
-      navigate(`/?search=${search}`);
-    },
-    [dispatch],
-  );
+    navigate(`/?search=${search}`);
+  }, []);
 
-  return <Search onSubmit={onSubmit} image={image} dispatch={dispatch} />;
+  return <Search onSubmit={onSubmit} data={data} dispatch={dispatch} />;
 }

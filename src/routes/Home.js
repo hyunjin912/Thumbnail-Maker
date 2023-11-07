@@ -5,13 +5,13 @@ import SearchContainer from "../component/SearchContainer";
 import ColumnContainer from "../component/ColumnContainer";
 
 function Home() {
-  const image = useSelector((state) => state.image);
+  const { page, data } = useSelector((state) => state.image);
 
   return (
     <Container>
       <Headline />
       <SearchContainer />
-      {image.length > 0 ? <ColumnContainer /> : null}
+      {data.length > 0 ? <ColumnContainer /> : null}
     </Container>
   );
 }

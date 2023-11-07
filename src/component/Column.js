@@ -31,7 +31,7 @@ function ColumnList({ className, imgs }) {
   );
 }
 
-function Column({ image, column }) {
+function Column({ data, column }) {
   const columns = [];
   for (let i = 1; i <= column; i++) {
     columns.push({
@@ -40,9 +40,9 @@ function Column({ image, column }) {
       imgs: [],
     });
   }
-  for (let i = 0; i < image.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     const idx = i % column;
-    columns[idx].imgs.push(image[i]);
+    columns[idx].imgs.push(data[i]);
   }
 
   return (

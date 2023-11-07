@@ -10,6 +10,8 @@ export async function getImages(search, page = 1) {
   const result = await data.json();
   totalPages = result.total_pages;
 
+  console.log("api - ", search);
+
   return result;
 }
 
@@ -18,6 +20,6 @@ export async function getImage(thumbId) {
     `https://api.unsplash.com/photos/${thumbId}?client_id=${cid}`,
   );
   const result = await data.json();
-
+  console.log("썸브 완료");
   return result;
 }

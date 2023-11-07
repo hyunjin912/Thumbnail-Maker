@@ -1,13 +1,11 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { getImages } from "../api";
 import styled from "styled-components";
 
-function Serach({ onSubmit, image, dispatch }) {
+function Serach({ onSubmit, data, dispatch }) {
   const [input, setInput] = useState("");
   const query = new URLSearchParams(useLocation().search).get("search");
-
-  console.log(image, dispatch, query);
 
   const onChange = useCallback((e) => {
     setInput(e.target.value);
@@ -18,13 +16,10 @@ function Serach({ onSubmit, image, dispatch }) {
   }, []);
 
   useEffect(() => {
-    console.log("effffffff");
     if (!input && query) {
-      console.log(111);
       setInput(query);
 
-      if (image.length === 0) {
-        console.log("설마?");
+      if (data.length === 0) {
         const reloadData = async () => {
           const result = await getImages(query);
           dispatch({
@@ -35,22 +30,7 @@ function Serach({ onSubmit, image, dispatch }) {
 
         reloadData();
       }
-    } else if (image.length === 0) {
-      console.log(222);
     }
-
-    //  else if (image && query) {
-    //   console.log("설마?");
-    // const reloadData = async () => {
-    //   const result = await getImages(query);
-    //   dispatch({
-    //     type: "ADD_IMAGES",
-    //     images: result.results,
-    //   });
-    // };
-
-    // reloadData();
-    // }
   }, []);
 
   return (
