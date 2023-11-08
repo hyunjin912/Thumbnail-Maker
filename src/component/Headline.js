@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 function Headline() {
+  console.log("Headline");
   return (
     <Wrap>
       <Title>
@@ -25,10 +26,6 @@ function Headline() {
 
 const Wrap = styled.div`
   margin-bottom: 20px;
-
-  @media (max-width: 768px) {
-    margin-bottom: 10px;
-  }
 `;
 
 const Title = styled.h1`
@@ -41,29 +38,11 @@ const Title = styled.h1`
   span {
     color: #fdc000;
   }
-
-  @media (max-width: 1024px) {
-    font-size: 60px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 20px 0 10px;
-    font-size: 45px;
-  }
 `;
 
 const Description = styled.p`
   font-size: 24px;
   line-height: 1.6;
-
-  @media (max-width: 1024px) {
-    font-size: 18px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 12px;
-    line-height: 1.3;
-  }
 `;
 
 export default Headline;

@@ -1,20 +1,81 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { getImage } from "../api";
 import styled, { css, keyframes } from "styled-components";
 
-function Maker() {
+function calc(e) {
+  const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
+  const wid = Math.floor(e.currentTarget.getBoundingClientRect().width);
+  const range = (Math.floor(e.clientX) - exCludeVal) / wid;
+  const leftValue = Math.min(
+    wid,
+    Math.max(0, Math.floor(e.clientX) - exCludeVal),
+  );
+  const opacityValue = Math.min(1, Math.max(0, range));
+
+  return {
+    opacity: opacityValue.toFixed(2) * 1,
+    left: leftValue,
+  };
+}
+
+function Maker({ id, setOpen }) {
   const [image, setImage] = useState({
     src: "",
     alt: "",
   });
-  const { thumbId } = useParams();
+  const [input, setInput] = useState({
+    main: "",
+    sub: "",
+    opacity: 0,
+    left: 0,
+  });
+  const [trigger, setTrigger] = useState(false);
+  const onTriggerStart = (e) => {
+    setTrigger(true);
+
+    const leftAndOpaticy = calc(e);
+    setInput((prev) => ({
+      ...prev,
+      ...leftAndOpaticy,
+    }));
+  };
+  const onMove = (e) => {
+    if (trigger) {
+      const leftAndOpaticy = calc(e);
+      setInput((prev) => ({
+        ...prev,
+        ...leftAndOpaticy,
+      }));
+    }
+  };
+  const onTriggerStop = () => {
+    setTrigger(false);
+  };
+  const onReset = () => {
+    setInput({
+      main: "",
+      sub: "",
+      opacity: 0,
+      left: 0,
+    });
+  };
+  const onChange = (e) => {
+    const { name, value } = e.target;
+
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     console.log("thumb Effect");
 
     const fetchData = async () => {
-      const re = await getImage(thumbId);
+      const re = await getImage(id);
 
       const img = new Image();
       img.src = re.urls.full;
@@ -27,10 +88,8 @@ function Maker() {
       };
     };
 
-    if (thumbId) {
-      fetchData();
-    }
-  }, [thumbId]);
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -41,7 +100,53 @@ function Maker() {
       </Wrap> */}
       <div className="maker_wrap">
         <div className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}>
+          <span
+            className="thumb__glass"
+            style={{ opacity: input.opacity }}
+          ></span>
           {image.src && <img src={image.src} alt={image.alt} />}
+          <ul className="thumb__text">
+            <li className="text__main">{input.main}</li>
+            <li className="text__sub">{input.sub}</li>
+          </ul>
+        </div>
+        <div className="maker__input">
+          <input
+            className="input__main"
+            name="main"
+            value={input.main}
+            onChange={onChange}
+            type="text"
+            placeholder="제목을 입력하세요."
+          />
+          <input
+            className="input__sub"
+            name="sub"
+            value={input.sub}
+            onChange={onChange}
+            type="text"
+            placeholder="부제목을 입력하세요."
+          />
+          <button className="input__reset" onClick={onReset}>
+            Reset
+          </button>
+          <div
+            className={trigger ? "input__range dimmed" : "input__range"}
+            onMouseDown={onTriggerStart}
+            onMouseMove={onMove}
+            onMouseUp={onTriggerStop}
+          >
+            <span
+              className="range__circle"
+              style={{ left: `${input.left}px` }}
+            ></span>
+          </div>
+        </div>
+        <div className="maker__button">
+          <button className="close" onClick={onClose}>
+            Close
+          </button>
+          <button className="capture">Capture</button>
         </div>
       </div>
     </>

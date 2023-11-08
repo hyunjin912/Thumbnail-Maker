@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Column from "./Column";
+import Spinner from "./Spinner";
 import { getImages } from "../api";
 
 export default function ColumnContainer() {
+  console.log("ColumnContainer");
   const { page, search, data } = useSelector((state) => state.image);
   const column = useSelector((state) => state.column);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("마운트");
@@ -30,14 +33,16 @@ export default function ColumnContainer() {
 
     window.addEventListener(
       "scroll",
-      throttle(1000, async () => {
+      throttle(500, async () => {
         if (
-          window.scrollY >=
-          (document.body.scrollHeight - viewportHeight) * 0.9
+          Math.ceil(window.scrollY) >=
+          Math.floor(document.body.scrollHeight - viewportHeight)
         ) {
+          if (loading) return;
           console.log("지금!! - ");
+          setLoading(true);
           const result = await getImages(search, page + 1);
-
+          setLoading(false);
           dispatch({
             type: "UPDATE_IMAGES",
             images: result.results,
@@ -52,7 +57,12 @@ export default function ColumnContainer() {
 
       window.removeEventListener("scroll", onScroll);
     };
-  }, [page]);
+  }, [page, loading]);
 
-  return <Column data={data} column={column} />;
+  return (
+    <>
+      <Column data={data} column={column} />
+      {loading ? <Spinner /> : null}
+    </>
+  );
 }

@@ -9,9 +9,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="thumb" element={<Thumbnail />}>
+      {/* <Route path="thumb" element={<Thumbnail />}>
         <Route path=":thumbId" element={<Thumbnail />} />
-      </Route>
+      </Route> */}
       <Route path="/*" element={<NotFound />} />
     </Routes>
   );

@@ -134,24 +134,167 @@ body {
 }
 
 .maker_wrap {
-  padding: 20px;
+  padding: 30px 50px;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(2, 0, 0, 0.75);
+}
+
+.maker_wrap .thumb__text {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.maker_wrap.color_reverse .thumb__text {
+  color: #000;
+}
+
+.thumb__text .text__main {
+  font-size: 48px;
+  font-weight: bold;
+}
+.thumb__text .text__sub {
+  font-size: 22px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid;
+}
+
+.maker_wrap .maker__input {
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.maker_wrap .maker__button,
+.maker_wrap .maker__input {
+  display: flex;
+  gap: 10px;
+  width: 768px;
+  margin: 16px auto 0;
+}
+
+.maker_wrap .maker__button {
+  width: 380px;
+}
+
+.maker__button button,
+.maker__input input {
+  flex: 1;
+  padding: 16px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.maker__button button,
+.maker__input button {
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.maker__button .close,
+.maker__input button {
+  background: #ccc;
+}
+
+.maker__button .close:hover,
+.maker__input button:hover {
+  background: #666;
+  color: #fff;
+}
+
+.maker__input .input__reset {
+  border-radius: 5px;
+  border: none;
+}
+
+.maker__input .input__range {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  background: #e7e7f5;
+  position: relative;
+  height: 10px;
+  border-radius: 10px;
+}
+
+.maker__input .input__range .range__circle {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: orange;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  position: relative;
+  z-index: 2;
+}
+
+.maker__input .input__range.dimmed::after {
+  content: "";
+  background: transparent;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+.maker__button .capture {
+  background: #fdc000;
+}
+
+.maker__button .capture:hover {
+  background: #f86a05;
+  color: #fff;
 }
 
 .thumb_wrap {
   overflow: hidden;
   position: relative;
-  max-width: 768px;
+  width: 768px;
   margin: 0 auto;
 }
 
 .thumb_wrap::before {
   content: "";
-  display: block;
-  padding-top: 56.25%;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .thumb_wrap.skeleton::before {
   background: #fdc000;
+}
+
+.thumb_wrap .thumb__glass {
+  content: "";
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding-top: 56.25%;
+  background: #000;
+  opacity: 0;
+}
+
+.thumb_wrap.skeleton .thumb__glass {
+  background: #fdc000;
+}
+
+.maker_wrap.color_reverse .thumb_wrap .thumb__glass {
+  background: #fff;
+}
+
+.thumb_wrap.skeleton::after {
+  z-index: 2;
 }
 
 .thumb_wrap img {

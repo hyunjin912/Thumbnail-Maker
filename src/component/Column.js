@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Maker from "./Maker";
 import styled from "styled-components";
 
 function ColumnItem({ img }) {
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const {
     urls: { regular },
     alt_description,
@@ -11,27 +12,31 @@ function ColumnItem({ img }) {
   } = img;
 
   const onClick = () => {
-    navigate(`thumb/${id}`);
+    setOpen(true);
   };
 
   return (
-    <ColumnItemWrap onClick={onClick}>
-      <img src={regular} alt={alt_description} />
-    </ColumnItemWrap>
+    <>
+      <ColumnItemWrap data-id={id} onClick={onClick}>
+        <img src={regular} alt={alt_description} />
+      </ColumnItemWrap>
+      {open && <Maker id={id} setOpen={setOpen} />}
+    </>
   );
 }
 
 function ColumnList({ className, imgs }) {
   return (
     <ColumnListWrap className={className}>
-      {imgs.map((img) => (
-        <ColumnItem key={img.id} img={img} />
+      {imgs.map((img, idx) => (
+        <ColumnItem key={idx} img={img} />
       ))}
     </ColumnListWrap>
   );
 }
 
 function Column({ data, column }) {
+  console.log("Column");
   const columns = [];
   for (let i = 1; i <= column; i++) {
     columns.push({
@@ -62,12 +67,6 @@ const Wrap = styled.div`
   img {
     max-width: 100%;
     display: block;
-  }
-
-  @media (max-width: 1024px) {
-  }
-
-  @media (max-width: 768px) {
   }
 `;
 

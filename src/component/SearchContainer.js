@@ -5,6 +5,7 @@ import Search from "./Search";
 import { getImages } from "../api";
 
 export default function SearchContainer() {
+  console.log("SearchContainer");
   const { page, search, data } = useSelector((state) => state.image);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,13 +17,18 @@ export default function SearchContainer() {
     const search = inputEl.value.trim();
     inputEl.blur();
 
-    const result = await getImages(search);
+    try {
+      const result = await getImages(search);
+      console.log("SC result - ", result);
 
-    dispatch({
-      type: "ADD_IMAGES",
-      search: search,
-      images: result.results,
-    });
+      dispatch({
+        type: "ADD_IMAGES",
+        search: search,
+        images: result.results,
+      });
+    } catch (e) {
+      console.log("오마이갓 - ", e);
+    }
 
     navigate(`/?search=${search}`);
   }, []);
