@@ -6,7 +6,7 @@ import { getImages } from "../api";
 
 export default function SearchContainer() {
   console.log("SearchContainer");
-  const { page, search, data } = useSelector((state) => state.image);
+  // const { page, search, data } = useSelector((state) => state.image);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,12 +26,13 @@ export default function SearchContainer() {
         search: search,
         images: result.results,
       });
-    } catch (e) {
-      console.log("오마이갓 - ", e);
-    }
 
-    navigate(`/?search=${search}`);
+      navigate(`/?search=${search}`);
+    } catch (e) {
+      window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+      navigate("/");
+    }
   }, []);
 
-  return <Search onSubmit={onSubmit} data={data} dispatch={dispatch} />;
+  return <Search onSubmit={onSubmit} dispatch={dispatch} />;
 }

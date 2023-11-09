@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Headline from "../component/Headline";
 import SearchContainer from "../component/SearchContainer";
 import ColumnContainer from "../component/ColumnContainer";
+
 function Home() {
   console.log("Home");
   const { page, data } = useSelector((state) => state.image);

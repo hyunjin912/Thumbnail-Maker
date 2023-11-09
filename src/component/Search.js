@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { getImages } from "../api";
 import styled from "styled-components";
 
-function Serach({ onSubmit, data, dispatch }) {
+function Serach({ onSubmit, dispatch }) {
   console.log("Serach");
   const [input, setInput] = useState("");
   const query = new URLSearchParams(useLocation().search).get("search");
@@ -13,27 +13,31 @@ function Serach({ onSubmit, data, dispatch }) {
   }, []);
 
   const onFocus = useCallback((e) => {
-    setInput(e.target.value.trim());
+    if (e.target.value.legnth > 0) {
+      setInput(e.target.value.trim());
+    }
   }, []);
 
   useEffect(() => {
-    if (!input && query) {
+    if (query === null) {
+      console.log("이게 동작하나11111");
+      setInput("");
+      dispatch({ type: "RESET_IMAGES" });
+    } else {
+      console.log("이게 동작하나222222");
       setInput(query);
+      const reloadData = async () => {
+        const result = await getImages(query);
+        dispatch({
+          type: "ADD_IMAGES",
+          search: query,
+          images: result.results,
+        });
+      };
 
-      if (data.length === 0) {
-        const reloadData = async () => {
-          const result = await getImages(query);
-          dispatch({
-            type: "ADD_IMAGES",
-            search: query,
-            images: result.results,
-          });
-        };
-
-        reloadData();
-      }
+      reloadData();
     }
-  }, []);
+  }, [query]);
 
   return (
     <Wrap>
