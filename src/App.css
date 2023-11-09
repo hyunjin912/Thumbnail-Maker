@@ -176,22 +176,32 @@ body {
 .maker_wrap .maker__button,
 .maker_wrap .maker__input {
   display: flex;
-  gap: 10px;
   width: 768px;
   margin: 16px auto 0;
 }
 
 .maker_wrap .maker__button {
+  gap: 10px;
   width: 380px;
+  margin-top: 30px;
 }
 
-.maker__button button,
-.maker__input input {
+.maker__button button {
   flex: 1;
-  padding: 16px 10px;
+  padding: 12px 10px;
   border: none;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.maker__input .input__main,
+.maker__input .input__sub {
+  width: calc(50% - 10px);
+  box-sizing: border-box;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
 }
 
 .maker__button button,
@@ -213,23 +223,37 @@ body {
   color: #fff;
 }
 
-.maker__input .input__reset {
-  border-radius: 5px;
-  border: none;
+.left__area {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lines {
+  width: calc(50% - 10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input__label {
+  color: #fff;
+  font-size: 18px;
 }
 
 .maker__input .input__range {
-  width: 50%;
+  width: 65%;
   display: flex;
   align-items: center;
   background: #e7e7f5;
   position: relative;
   height: 10px;
+  margin-right: 10px;
   border-radius: 10px;
 }
 
 .maker__input .input__range .range__circle {
-  content: "";
   display: block;
   width: 20px;
   height: 20px;
@@ -246,6 +270,58 @@ body {
   position: fixed;
   inset: 0;
   z-index: 1;
+}
+
+.rdo__reverse {
+  width: 65%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+[name="reverse"] + label {
+  flex: 1;
+  background: #ccc;
+  border-radius: 5px;
+  text-align: center;
+  padding: 12px 10px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+[name="reverse"] + label:hover {
+  color: #fff;
+  background: #666;
+}
+
+[name="reverse"]:checked + label {
+  color: #fff;
+  background: orange;
+}
+
+.sr_only {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  -webkit-clip-path: inset(50%) !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+}
+
+.right__area {
+  flex: 0 0 50px;
+  display: flex;
+}
+
+.maker__input .input__reset {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
 }
 
 .maker__button .capture {

@@ -28,8 +28,16 @@ function Maker({ id, setOpen }) {
     sub: "",
     opacity: 0,
     left: 0,
+    reverse: "false",
   });
   const [trigger, setTrigger] = useState(false);
+  const onReverse = (e) => {
+    const { value } = e.target;
+    setInput((prev) => ({
+      ...prev,
+      reverse: value,
+    }));
+  };
   const onTriggerStart = (e) => {
     setTrigger(true);
 
@@ -57,6 +65,7 @@ function Maker({ id, setOpen }) {
       sub: "",
       opacity: 0,
       left: 0,
+      reverse: "false",
     });
   };
   const onChange = (e) => {
@@ -98,7 +107,11 @@ function Maker({ id, setOpen }) {
           <Thumb $url={img.src} />
         </ThumbWrap>
       </Wrap> */}
-      <div className="maker_wrap">
+      <div
+        className={
+          input.reverse === "true" ? "maker_wrap color_reverse" : "maker_wrap"
+        }
+      >
         <div className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}>
           <span
             className="thumb__glass"
@@ -111,35 +124,67 @@ function Maker({ id, setOpen }) {
           </ul>
         </div>
         <div className="maker__input">
-          <input
-            className="input__main"
-            name="main"
-            value={input.main}
-            onChange={onChange}
-            type="text"
-            placeholder="제목을 입력하세요."
-          />
-          <input
-            className="input__sub"
-            name="sub"
-            value={input.sub}
-            onChange={onChange}
-            type="text"
-            placeholder="부제목을 입력하세요."
-          />
-          <button className="input__reset" onClick={onReset}>
-            Reset
-          </button>
-          <div
-            className={trigger ? "input__range dimmed" : "input__range"}
-            onMouseDown={onTriggerStart}
-            onMouseMove={onMove}
-            onMouseUp={onTriggerStop}
-          >
-            <span
-              className="range__circle"
-              style={{ left: `${input.left}px` }}
-            ></span>
+          <div className="left__area">
+            <input
+              className="input__main"
+              name="main"
+              value={input.main}
+              onChange={onChange}
+              type="text"
+              placeholder="제목을 입력하세요."
+            />
+            <input
+              className="input__sub"
+              name="sub"
+              value={input.sub}
+              onChange={onChange}
+              type="text"
+              placeholder="부제목을 입력하세요."
+            />
+            <div className="opacity__line lines">
+              <div className="opacity__label input__label">배경 명암</div>
+              <div
+                className={trigger ? "input__range dimmed" : "input__range"}
+                onMouseDown={onTriggerStart}
+                onMouseMove={onMove}
+                onMouseUp={onTriggerStop}
+              >
+                <span
+                  className="range__circle"
+                  style={{ left: `${input.left}px` }}
+                ></span>
+              </div>
+            </div>
+            <div className="reverse__line lines">
+              <div className="reverse__label input__label">색상 반전</div>
+              <div className="rdo__reverse">
+                <input
+                  type="radio"
+                  id="rdo1"
+                  name="reverse"
+                  className="sr_only"
+                  value="true"
+                  onChange={onReverse}
+                  checked={input.reverse === "true"}
+                />
+                <label htmlFor="rdo1">사용</label>
+                <input
+                  type="radio"
+                  id="rdo2"
+                  name="reverse"
+                  className="sr_only"
+                  value="false"
+                  onChange={onReverse}
+                  checked={input.reverse === "false"}
+                />
+                <label htmlFor="rdo2">미사용</label>
+              </div>
+            </div>
+          </div>
+          <div className="right__area">
+            <button className="input__reset" onClick={onReset}>
+              Reset
+            </button>
           </div>
         </div>
         <div className="maker__button">
