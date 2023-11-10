@@ -1,11 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getImages } from "../api";
 import styled from "styled-components";
 
 function Serach({ onSubmit, dispatch }) {
   console.log("Serach");
   const [input, setInput] = useState("");
+  const navigate = useNavigate();
   const query = new URLSearchParams(useLocation().search).get("search");
 
   const onChange = useCallback((e) => {
@@ -25,16 +26,22 @@ function Serach({ onSubmit, dispatch }) {
       dispatch({ type: "RESET_IMAGES" });
     } else {
       console.log("이게 동작하나222222");
-      setInput(query);
+
       const reloadData = async () => {
-        const result = await getImages(query);
-        dispatch({
-          type: "ADD_IMAGES",
-          search: query,
-          images: result.results,
-        });
+        try {
+          const result = await getImages(query);
+          dispatch({
+            type: "ADD_IMAGES",
+            search: query,
+            images: result.results,
+          });
+        } catch (e) {
+          window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+          navigate("/");
+        }
       };
 
+      setInput(query);
       reloadData();
     }
   }, [query]);

@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import Column from "./Column";
 import Spinner from "./Spinner";
 import { getImages } from "../api";
+import { useNavigate } from "react-router-dom";
 
-export default function ColumnContainer() {
+export default function ColumnContainer({ loading, setLoading }) {
   console.log("ColumnContainer");
+  const navigate = useNavigate();
   const { page, search, data } = useSelector((state) => state.image);
   const column = useSelector((state) => state.column);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("마운트");
@@ -41,13 +42,21 @@ export default function ColumnContainer() {
           if (loading) return;
           console.log("지금!! - ");
           setLoading(true);
-          const result = await getImages(search, page + 1);
-          setLoading(false);
-          dispatch({
-            type: "UPDATE_IMAGES",
-            images: result.results,
-            page: page + 1,
-          });
+
+          try {
+            const result = await getImages(search, page + 1);
+            setLoading(false);
+            dispatch({
+              type: "UPDATE_IMAGES",
+              images: result.results,
+              page: page + 1,
+            });
+          } catch (e) {
+            window.alert(
+              "예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.",
+            );
+            navigate("/");
+          }
         }
       }),
     );

@@ -1,18 +1,18 @@
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Headline from "../component/Headline";
 import SearchContainer from "../component/SearchContainer";
 import ColumnContainer from "../component/ColumnContainer";
+import { useState } from "react";
 
 function Home() {
   console.log("Home");
-  const { page, data } = useSelector((state) => state.image);
+  const [loading, setLoading] = useState(false);
 
   return (
     <Container>
       <Headline />
-      <SearchContainer />
-      {data.length > 0 ? <ColumnContainer /> : null}
+      <SearchContainer loading={loading} setLoading={setLoading} />
+      <ColumnContainer loading={loading} setLoading={setLoading} />
     </Container>
   );
 }

@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { getImage } from "../api";
 import styled, { css, keyframes } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 function calc(e) {
   const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
+
   const wid = Math.floor(e.currentTarget.getBoundingClientRect().width);
-  const range = (Math.floor(e.clientX) - exCludeVal) / wid;
+  const clientX = e.clientX || e.touches[0].clientX;
+  const range = (Math.floor(clientX) - exCludeVal) / wid;
   const leftValue = Math.min(
     wid,
-    Math.max(0, Math.floor(e.clientX) - exCludeVal),
+    Math.max(0, Math.floor(clientX) - exCludeVal),
   );
   const opacityValue = Math.min(1, Math.max(0, range));
 
@@ -19,6 +22,7 @@ function calc(e) {
 }
 
 function Maker({ id, setOpen }) {
+  const navigate = useNavigate();
   const [image, setImage] = useState({
     src: "",
     alt: "",
@@ -39,8 +43,8 @@ function Maker({ id, setOpen }) {
     }));
   };
   const onTriggerStart = (e) => {
+    if ("ontouchstart" in window && e.type === "mousedown") return;
     setTrigger(true);
-
     const leftAndOpaticy = calc(e);
     setInput((prev) => ({
       ...prev,
@@ -48,6 +52,7 @@ function Maker({ id, setOpen }) {
     }));
   };
   const onMove = (e) => {
+    if ("ontouchmove" in window && e.type === "mousemove") return;
     if (trigger) {
       const leftAndOpaticy = calc(e);
       setInput((prev) => ({
@@ -56,7 +61,8 @@ function Maker({ id, setOpen }) {
       }));
     }
   };
-  const onTriggerStop = () => {
+  const onTriggerStop = (e) => {
+    if ("ontouchend" in window && e.type === "mouseup") return;
     setTrigger(false);
   };
   const onReset = () => {
@@ -83,21 +89,31 @@ function Maker({ id, setOpen }) {
   useEffect(() => {
     console.log("thumb Effect");
 
-    const fetchData = async () => {
-      const re = await getImage(id);
+    document.body.style.overflow = "hidden";
 
-      const img = new Image();
-      img.src = re.urls.full;
-      img.onload = () => {
-        console.log("썸브 로딩 완료");
-        setImage({
-          src: re.urls.full,
-          alt: re.alt_description,
-        });
-      };
+    const fetchData = async () => {
+      try {
+        const re = await getImage(id);
+        const img = new Image();
+        img.src = re.urls.full;
+        img.onload = () => {
+          console.log("썸브 로딩 완료");
+          setImage({
+            src: re.urls.full,
+            alt: re.alt_description,
+          });
+        };
+      } catch (e) {
+        window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+        navigate("/");
+      }
     };
 
     fetchData();
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, []);
 
   return (
@@ -148,6 +164,9 @@ function Maker({ id, setOpen }) {
                 onMouseDown={onTriggerStart}
                 onMouseMove={onMove}
                 onMouseUp={onTriggerStop}
+                onTouchStart={onTriggerStart}
+                onTouchMove={onMove}
+                onTouchEnd={onTriggerStop}
               >
                 <span
                   className="range__circle"
