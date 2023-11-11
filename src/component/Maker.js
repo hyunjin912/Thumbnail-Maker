@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getImage } from "../api";
 import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 function calc(e) {
   const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
@@ -35,6 +36,7 @@ function Maker({ id, setOpen }) {
     reverse: "false",
   });
   const [trigger, setTrigger] = useState(false);
+  const thumb = useRef(null);
   const onReverse = (e) => {
     const { value } = e.target;
     setInput((prev) => ({
@@ -85,6 +87,18 @@ function Maker({ id, setOpen }) {
   const onClose = () => {
     setOpen(false);
   };
+  const onCapture = () => {
+    const opt = {
+      allowTaint: true,
+      useCORS: true,
+    };
+    html2canvas(thumb.current, opt).then((canvas) => {
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = "maker.png";
+      a.click();
+    });
+  };
 
   useEffect(() => {
     console.log("thumb Effect");
@@ -128,7 +142,10 @@ function Maker({ id, setOpen }) {
           input.reverse === "true" ? "maker_wrap color_reverse" : "maker_wrap"
         }
       >
-        <div className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}>
+        <div
+          ref={thumb}
+          className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}
+        >
           <span
             className="thumb__glass"
             style={{ opacity: input.opacity }}
@@ -210,7 +227,9 @@ function Maker({ id, setOpen }) {
           <button className="close" onClick={onClose}>
             Close
           </button>
-          <button className="capture">Capture</button>
+          <button className="capture" onClick={onCapture}>
+            Download
+          </button>
         </div>
       </div>
     </>
