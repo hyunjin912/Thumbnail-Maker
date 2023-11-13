@@ -7,9 +7,8 @@ import html2canvas from "html2canvas";
 
 function calc(e) {
   const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
-
   const wid = Math.floor(e.currentTarget.getBoundingClientRect().width);
-  const clientX = e.clientX || e.touches[0].clientX;
+  const clientX = "ontouchstart" in window ? e.touches[0].clientX : e.clientX;
   const range = (Math.floor(clientX) - exCludeVal) / wid;
   const leftValue = Math.min(
     wid,
@@ -19,7 +18,7 @@ function calc(e) {
 
   return {
     opacity: opacityValue.toFixed(2) * 1,
-    left: leftValue,
+    left: (leftValue / wid) * 100,
   };
 }
 
@@ -201,7 +200,7 @@ function Maker({ id, setOpen }) {
                 >
                   <span
                     className="range__circle"
-                    style={{ left: `${input.left}px` }}
+                    style={{ left: `${input.left}%` }}
                   ></span>
                 </div>
               </div>
