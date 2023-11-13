@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Spinner from "./Spinner";
 import { getImage } from "../api";
 import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ function calc(e) {
 
 function Maker({ id, setOpen }) {
   const navigate = useNavigate();
+  const [makingCanvas, setMakingCanvas] = useState(false);
   const [image, setImage] = useState({
     src: "",
     alt: "",
@@ -87,17 +89,23 @@ function Maker({ id, setOpen }) {
   const onClose = () => {
     setOpen(false);
   };
-  const onCapture = () => {
+  const onCapture = async () => {
+    if (image.src.length <= 0) return;
+    setMakingCanvas(true);
+
     const opt = {
       allowTaint: true,
       useCORS: true,
     };
-    html2canvas(thumb.current, opt).then((canvas) => {
-      const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/png");
-      a.download = "maker.png";
-      a.click();
-    });
+    const canvas = await html2canvas(thumb.current, opt);
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "maker.png";
+    a.click();
+    // const win = window.open();
+    // win.document.write(`<img src=${canvas.toDataURL("image/png")}>`);
+
+    setMakingCanvas(false);
   };
 
   useEffect(() => {
@@ -137,104 +145,128 @@ function Maker({ id, setOpen }) {
           <Thumb $url={img.src} />
         </ThumbWrap>
       </Wrap> */}
+      <SpinnerWrap $makingCanvas={makingCanvas}>
+        <Spinner />
+      </SpinnerWrap>
       <div
         className={
           input.reverse === "true" ? "maker_wrap color_reverse" : "maker_wrap"
         }
       >
-        <div
-          ref={thumb}
-          className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}
-        >
-          <span
-            className="thumb__glass"
-            style={{ opacity: input.opacity }}
-          ></span>
-          {image.src && <img src={image.src} alt={image.alt} />}
-          <ul className="thumb__text">
-            <li className="text__main">{input.main}</li>
-            <li className="text__sub">{input.sub}</li>
-          </ul>
-        </div>
-        <div className="maker__input">
-          <div className="left__area">
-            <input
-              className="input__main"
-              name="main"
-              value={input.main}
-              onChange={onChange}
-              type="text"
-              placeholder="제목을 입력하세요."
-            />
-            <input
-              className="input__sub"
-              name="sub"
-              value={input.sub}
-              onChange={onChange}
-              type="text"
-              placeholder="부제목을 입력하세요."
-            />
-            <div className="opacity__line lines">
-              <div className="opacity__label input__label">배경 명암</div>
-              <div
-                className={trigger ? "input__range dimmed" : "input__range"}
-                onMouseDown={onTriggerStart}
-                onMouseMove={onMove}
-                onMouseUp={onTriggerStop}
-                onTouchStart={onTriggerStart}
-                onTouchMove={onMove}
-                onTouchEnd={onTriggerStop}
-              >
-                <span
-                  className="range__circle"
-                  style={{ left: `${input.left}px` }}
-                ></span>
+        <div className="inner">
+          <div
+            ref={thumb}
+            className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}
+          >
+            <span
+              className="thumb__glass"
+              style={{ opacity: input.opacity }}
+            ></span>
+            {image.src && <img src={image.src} alt={image.alt} />}
+            <ul className="thumb__text">
+              <li className="text__main">{input.main}</li>
+              <li className="text__sub">{input.sub}</li>
+            </ul>
+          </div>
+          <div className="maker__input">
+            <div className="left__area">
+              <input
+                className="input__main"
+                name="main"
+                value={input.main}
+                onChange={onChange}
+                type="text"
+                placeholder="제목을 입력하세요."
+                autoComplete="off"
+              />
+              <input
+                className="input__sub"
+                name="sub"
+                value={input.sub}
+                onChange={onChange}
+                type="text"
+                placeholder="부제목을 입력하세요."
+                autoComplete="off"
+              />
+              <div className="opacity__line lines">
+                <div className="opacity__label input__label">배경 명암</div>
+                <div
+                  className={trigger ? "input__range dimmed" : "input__range"}
+                  onMouseDown={onTriggerStart}
+                  onMouseMove={onMove}
+                  onMouseUp={onTriggerStop}
+                  onTouchStart={onTriggerStart}
+                  onTouchMove={onMove}
+                  onTouchEnd={onTriggerStop}
+                >
+                  <span
+                    className="range__circle"
+                    style={{ left: `${input.left}px` }}
+                  ></span>
+                </div>
+              </div>
+              <div className="reverse__line lines">
+                <div className="reverse__label input__label">색상 반전</div>
+                <div className="rdo__reverse">
+                  <input
+                    type="radio"
+                    id="rdo1"
+                    name="reverse"
+                    className="sr_only"
+                    value="true"
+                    onChange={onReverse}
+                    checked={input.reverse === "true"}
+                  />
+                  <label htmlFor="rdo1">사용</label>
+                  <input
+                    type="radio"
+                    id="rdo2"
+                    name="reverse"
+                    className="sr_only"
+                    value="false"
+                    onChange={onReverse}
+                    checked={input.reverse === "false"}
+                  />
+                  <label htmlFor="rdo2">미사용</label>
+                </div>
               </div>
             </div>
-            <div className="reverse__line lines">
-              <div className="reverse__label input__label">색상 반전</div>
-              <div className="rdo__reverse">
-                <input
-                  type="radio"
-                  id="rdo1"
-                  name="reverse"
-                  className="sr_only"
-                  value="true"
-                  onChange={onReverse}
-                  checked={input.reverse === "true"}
-                />
-                <label htmlFor="rdo1">사용</label>
-                <input
-                  type="radio"
-                  id="rdo2"
-                  name="reverse"
-                  className="sr_only"
-                  value="false"
-                  onChange={onReverse}
-                  checked={input.reverse === "false"}
-                />
-                <label htmlFor="rdo2">미사용</label>
-              </div>
+            <div className="right__area">
+              <button className="input__reset" onClick={onReset}>
+                Reset
+              </button>
             </div>
           </div>
-          <div className="right__area">
-            <button className="input__reset" onClick={onReset}>
-              Reset
+          <div className="maker__button">
+            <button className="close" onClick={onClose}>
+              Close
+            </button>
+            <button className="capture" onClick={onCapture}>
+              Download
             </button>
           </div>
-        </div>
-        <div className="maker__button">
-          <button className="close" onClick={onClose}>
-            Close
-          </button>
-          <button className="capture" onClick={onCapture}>
-            Download
-          </button>
         </div>
       </div>
     </>
   );
 }
+
+const SpinnerWrap = styled.div`
+  ${(props) =>
+    props.$makingCanvas
+      ? css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        `
+      : css`
+          display: none;
+        `}
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.5);
+`;
 
 const sk = () => {
   const skeleton_loader = keyframes`

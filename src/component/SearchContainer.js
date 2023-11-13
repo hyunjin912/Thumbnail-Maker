@@ -10,33 +10,40 @@ export default function SearchContainer({ loading, setLoading }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = useCallback(async (e) => {
-    e.preventDefault();
+  const onSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    const [inputEl] = e.target.children;
-    const search = inputEl.value.trim();
-    inputEl.blur();
+      const [inputEl] = e.target.children;
+      const search = inputEl.value.trim();
+      inputEl.blur();
+      console.log("submit - ", search, search.length);
+      if (search.length > 0) {
+        setLoading(true);
+        navigate(`/?search=${search}`);
+      } else {
+        navigate("/");
+      }
 
-    navigate(`/?search=${search}`);
+      try {
+        const result = await getImages(search);
+        console.log("SC result - ", result);
 
-    try {
-      setLoading(true);
+        dispatch({
+          type: "ADD_IMAGES",
+          search: search,
+          images: result.results,
+          total_pages: result.total_pages,
+        });
 
-      const result = await getImages(search);
-      console.log("SC result - ", result);
-
-      dispatch({
-        type: "ADD_IMAGES",
-        search: search,
-        images: result.results,
-      });
-
-      setLoading(false);
-    } catch (e) {
-      window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
-      navigate("/");
-    }
-  }, []);
+        setLoading(false);
+      } catch (e) {
+        window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+        navigate("/");
+      }
+    },
+    [search, data],
+  );
 
   return (
     <Search

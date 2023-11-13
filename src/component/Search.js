@@ -34,6 +34,7 @@ function Serach({ onSubmit, dispatch }) {
             type: "ADD_IMAGES",
             search: query,
             images: result.results,
+            total_pages: result.total_pages,
           });
         } catch (e) {
           window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
@@ -72,6 +73,13 @@ const Wrap = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   z-index: 1;
+
+  @media (max-width: 1024px) {
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Form = styled.form`
@@ -87,6 +95,10 @@ const Input = styled.input`
   outline: none;
   border: none;
   padding: 0 20px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Button = styled.button`
@@ -106,6 +118,10 @@ const Button = styled.button`
   &:hover {
     background: #f86a05;
     color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
   }
 `;
 

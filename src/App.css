@@ -90,6 +90,7 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  word-wrap: break-word;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -134,15 +135,18 @@ body {
 }
 
 .maker_wrap {
-  padding: 30px 50px;
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(2, 0, 0, 0.75);
+  background: rgba(2, 0, 0, 0.8);
 
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.maker_wrap .inner {
+  max-width: 768px;
 }
 
 .maker_wrap .thumb__text {
@@ -180,7 +184,7 @@ body {
 .maker_wrap .maker__button,
 .maker_wrap .maker__input {
   display: flex;
-  width: 768px;
+  width: 100%;
   margin: 16px auto 0;
 }
 
@@ -340,8 +344,7 @@ body {
 .thumb_wrap {
   overflow: hidden;
   position: relative;
-  width: 768px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .thumb_wrap::before {
@@ -421,5 +424,47 @@ body {
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .maker_wrap {
+    padding: 0 10px;
+  }
+  .thumb__text .text__main {
+    font-size: 6.25vw;
+  }
+  .thumb__text .text__sub {
+    font-size: 2.8646vw;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid;
+  }
+  .maker_wrap .maker__input {
+    gap: 10px;
+  }
+  .maker__input .input__main,
+  .maker__input .input__sub {
+    width: 100%;
+    font-size: 14px;
+  }
+  .lines {
+    display: block;
+    width: 100%;
+  }
+  .input__label {
+    font-size: 16px;
+  }
+  .maker__input .input__range {
+    width: auto;
+    margin: 10px 10px 0;
+  }
+  .rdo__reverse {
+    width: auto;
+    margin-top: 10px;
+  }
+  .maker_wrap .maker__button {
+    width: auto;
+    margin-top: 16px;
   }
 }

@@ -2,6 +2,7 @@ const initialState = {
   search: "",
   page: 1,
   data: [],
+  total_pages: null,
 };
 
 export default function image(state = initialState, action) {
@@ -11,18 +12,21 @@ export default function image(state = initialState, action) {
         search: action.search,
         page: 1,
         data: [...action.images],
+        total_pages: action.total_pages,
       };
     case "UPDATE_IMAGES":
       return {
         search: state.search,
         page: action.page,
         data: [...state.data, ...action.images],
+        total_pages: action.total_pages,
       };
     case "RESET_IMAGES":
       return {
         search: "",
         page: 1,
         data: [],
+        total_pages: null,
       };
     default:
       return state;
