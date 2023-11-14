@@ -37,7 +37,7 @@ function Maker({ id, setOpen }) {
     reverse: "false",
   });
   const [trigger, setTrigger] = useState(false);
-  const thumb = useRef(null);
+  const preview = useRef(null);
   const onReverse = (e) => {
     const { value } = e.target;
     setInput((prev) => ({
@@ -88,7 +88,7 @@ function Maker({ id, setOpen }) {
   const onClose = () => {
     setOpen(false);
   };
-  const onCapture = async () => {
+  const onDownload = async () => {
     if (image.src.length <= 0) return;
     setMakingCanvas(true);
 
@@ -96,7 +96,7 @@ function Maker({ id, setOpen }) {
       allowTaint: true,
       useCORS: true,
     };
-    const canvas = await html2canvas(thumb.current, opt);
+    const canvas = await html2canvas(preview.current, opt);
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
     a.download = "maker.png";
@@ -149,28 +149,28 @@ function Maker({ id, setOpen }) {
       </SpinnerWrap>
       <div
         className={
-          input.reverse === "true" ? "maker_wrap color_reverse" : "maker_wrap"
+          input.reverse === "true" ? "interface color_reverse" : "interface"
         }
       >
-        <div className="inner">
+        <div className="interface__inner">
           <div
-            ref={thumb}
-            className={image.src ? "thumb_wrap" : "thumb_wrap skeleton"}
+            ref={preview}
+            className={image.src ? "interface__preview" : "interface__preview skeleton"}
           >
             <span
-              className="thumb__glass"
+              className="interface__preview-glass"
               style={{ opacity: input.opacity }}
             ></span>
             {image.src && <img src={image.src} alt={image.alt} />}
-            <ul className="thumb__text">
-              <li className="text__main">{input.main}</li>
-              <li className="text__sub">{input.sub}</li>
+            <ul className="interface__texts">
+              <li className="interface__texts-main">{input.main}</li>
+              <li className="interface__texts-sub">{input.sub}</li>
             </ul>
           </div>
-          <div className="maker__input">
-            <div className="left__area">
+          <div className="interface__setting">
+            <div className="interface__setting-inputs">
               <input
-                className="input__main"
+                className="interface__setting-main"
                 name="main"
                 value={input.main}
                 onChange={onChange}
@@ -179,7 +179,7 @@ function Maker({ id, setOpen }) {
                 autoComplete="off"
               />
               <input
-                className="input__sub"
+                className="interface__setting-sub"
                 name="sub"
                 value={input.sub}
                 onChange={onChange}
@@ -187,10 +187,10 @@ function Maker({ id, setOpen }) {
                 placeholder="부제목을 입력하세요."
                 autoComplete="off"
               />
-              <div className="opacity__line lines">
-                <div className="opacity__label input__label">배경 명암</div>
+              <div className="interface__line interface__line-opacity">
+                <div className="interface__label interface__label-opacity">배경 명암</div>
                 <div
-                  className={trigger ? "input__range dimmed" : "input__range"}
+                  className={trigger ? "interface__range dimmed" : "interface__range"}
                   onMouseDown={onTriggerStart}
                   onMouseMove={onMove}
                   onMouseUp={onTriggerStop}
@@ -198,49 +198,55 @@ function Maker({ id, setOpen }) {
                   onTouchMove={onMove}
                   onTouchEnd={onTriggerStop}
                 >
+                  <div className="interface__back">
+                    <div
+                      className="interface__front"
+                      style={{ width: `${input.left}%` }}
+                    ></div>
+                  </div>
                   <span
-                    className="range__circle"
+                    className="interface__range-circle"
                     style={{ left: `${input.left}%` }}
                   ></span>
                 </div>
               </div>
-              <div className="reverse__line lines">
-                <div className="reverse__label input__label">색상 반전</div>
-                <div className="rdo__reverse">
+              <div className="interface__line interface__line-reverse">
+                <div className="interface__label interface__label-reverse">색상 반전</div>
+                <div className="interface__reverse">
                   <input
                     type="radio"
                     id="rdo1"
                     name="reverse"
-                    className="sr_only"
+                    className="interface__rdo-reverse sr_only"
                     value="true"
                     onChange={onReverse}
                     checked={input.reverse === "true"}
                   />
-                  <label htmlFor="rdo1">사용</label>
+                  <label htmlFor="rdo1" className="interface__rdo-label">사용</label>
                   <input
                     type="radio"
                     id="rdo2"
                     name="reverse"
-                    className="sr_only"
+                    className="interface__rdo-reverse sr_only"
                     value="false"
                     onChange={onReverse}
                     checked={input.reverse === "false"}
                   />
-                  <label htmlFor="rdo2">미사용</label>
+                  <label htmlFor="rdo2" className="interface__rdo-label">미사용</label>
                 </div>
               </div>
             </div>
-            <div className="right__area">
-              <button className="input__reset" onClick={onReset}>
+            <div className="interface__setting-reset">
+              <button className="interface__btn-reset" onClick={onReset}>
                 Reset
               </button>
             </div>
           </div>
-          <div className="maker__button">
-            <button className="close" onClick={onClose}>
+          <div className="interface__btns">
+            <button className="interface__btn interface__close" onClick={onClose}>
               Close
             </button>
-            <button className="capture" onClick={onCapture}>
+            <button className="interface__btn interface__download" onClick={onDownload}>
               Download
             </button>
           </div>

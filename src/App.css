@@ -134,7 +134,7 @@ body {
   height: 100vh;
 }
 
-.maker_wrap {
+.interface {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -144,12 +144,10 @@ body {
   justify-content: center;
   align-items: center;
 }
-
-.maker_wrap .inner {
+.interface__inner {
   max-width: 768px;
 }
-
-.maker_wrap .thumb__text {
+.interface__texts {
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -159,51 +157,44 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-.maker_wrap.color_reverse .thumb__text {
+.interface.color_reverse .interface__texts {
   color: #000;
 }
-
-.thumb__text .text__main {
+.interface__texts-main {
   font-size: 48px;
   font-weight: bold;
 }
-.thumb__text .text__sub {
+.interface__texts-sub {
   font-size: 22px;
   margin-top: 10px;
   padding-top: 10px;
   border-top: 2px solid;
 }
-
-.maker_wrap .maker__input {
+.interface__setting {
   flex-wrap: wrap;
   position: relative;
   z-index: 2;
 }
-
-.maker_wrap .maker__button,
-.maker_wrap .maker__input {
+.interface__btns,
+.interface__setting {
   display: flex;
   width: 100%;
   margin: 16px auto 0;
 }
-
-.maker_wrap .maker__button {
+.interface__btns {
   gap: 10px;
   width: 380px;
   margin-top: 30px;
 }
-
-.maker__button button {
+.interface__btn {
   flex: 1;
   padding: 12px 10px;
   border: none;
   border-radius: 5px;
   font-size: 18px;
 }
-
-.maker__input .input__main,
-.maker__input .input__sub {
+.interface__setting-main,
+.interface__setting-sub {
   width: calc(50% - 10px);
   box-sizing: border-box;
   padding: 12px 10px;
@@ -211,83 +202,82 @@ body {
   border-radius: 5px;
   font-size: 18px;
 }
-
-.maker__button button,
-.maker__input button {
+.interface__btn,
+.interface__btn-reset {
   cursor: pointer;
   transition:
     background 0.2s,
     color 0.2s;
 }
-
-.maker__button .close,
-.maker__input button {
+.interface__close,
+.interface__btn-reset {
   background: #ccc;
 }
-
-.maker__button .close:hover,
-.maker__input button:hover {
+.interface__close:hover,
+.interface__btn-reset:hover {
   background: #666;
   color: #fff;
 }
-
-.left__area {
+.interface__setting-inputs {
   flex: 1;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
-
-.lines {
+.interface__line {
   width: calc(50% - 10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
-.input__label {
+.interface__label {
   color: #fff;
   font-size: 18px;
 }
-
-.maker__input .input__range {
+.interface__range {
   width: 65%;
-  display: flex;
-  align-items: center;
+  position: relative;
+  margin-right: 10px;
+}
+.interface__back {
   background: #e7e7f5;
   position: relative;
   height: 10px;
-  margin-right: 10px;
   border-radius: 10px;
+  overflow: hidden;
 }
-
-.maker__input .input__range .range__circle {
+.interface__front {
+  background: orange;
+  width: 30%;
+  height: 100%;
+}
+.interface__range-circle {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: block;
   width: 20px;
   height: 20px;
   background: orange;
   border-radius: 50%;
-  transform: translateX(-50%);
-  position: relative;
-  z-index: 2;
+  box-sizing: border-box;
+  border: 3px solid #fff;
 }
-
-.maker__input .input__range.dimmed::after {
+.interface__range.dimmed::after {
   content: "";
   background: transparent;
   position: fixed;
   inset: 0;
   z-index: 1;
 }
-
-.rdo__reverse {
+.interface__reverse {
   width: 65%;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
-[name="reverse"] + label {
+.interface__rdo-reverse + .interface__rdo-label {
   flex: 1;
   background: #ccc;
   border-radius: 5px;
@@ -298,17 +288,14 @@ body {
     background 0.2s,
     color 0.2s;
 }
-
-[name="reverse"] + label:hover {
+.interface__rdo-reverse + .interface__rdo-label:hover {
   color: #fff;
   background: #666;
 }
-
-[name="reverse"]:checked + label {
+.interface__rdo-reverse:checked + .interface__rdo-label {
   color: #fff;
   background: orange;
 }
-
 .sr_only {
   position: absolute !important;
   clip-path: inset(50%) !important;
@@ -320,45 +307,37 @@ body {
   padding: 0 !important;
   white-space: nowrap !important;
 }
-
-.right__area {
+.interface__setting-reset {
   flex: 0 0 50px;
   display: flex;
 }
-
-.maker__input .input__reset {
+.interface__btn-reset {
   width: 100%;
   border-radius: 5px;
   border: none;
 }
-
-.maker__button .capture {
+.interface__download {
   background: #fdc000;
 }
-
-.maker__button .capture:hover {
+.interface__download:hover {
   background: #f86a05;
   color: #fff;
 }
-
-.thumb_wrap {
+.interface__preview {
   overflow: hidden;
   position: relative;
   width: 100%;
 }
-
-.thumb_wrap::before {
+.interface__preview::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
 }
-
-.thumb_wrap.skeleton::before {
+.interface__preview.skeleton::before {
   background: #fdc000;
 }
-
-.thumb_wrap .thumb__glass {
+.interface__preview-glass {
   content: "";
   position: relative;
   z-index: 1;
@@ -367,20 +346,16 @@ body {
   background: #000;
   opacity: 0;
 }
-
-.thumb_wrap.skeleton .thumb__glass {
+.interface__preview.skeleton .interface__preview-glass {
   background: #fdc000;
 }
-
-.maker_wrap.color_reverse .thumb_wrap .thumb__glass {
+.interface.color_reverse .interface__preview-glass {
   background: #fff;
 }
-
-.thumb_wrap.skeleton::after {
+.interface__preview.skeleton::after {
   z-index: 2;
 }
-
-.thumb_wrap img {
+.interface__preview img {
   position: absolute;
   top: 0;
   left: 0;
@@ -388,19 +363,10 @@ body {
   height: 100%;
   object-fit: cover;
 }
-
-.thumb {
-  position: absolute;
-  inset: 0;
-  background-position: center center;
-  background-size: cover;
-}
-
 .skeleton {
   position: relative;
   overflow: hidden;
 }
-
 .skeleton::after {
   content: "";
   width: 100%;
@@ -428,42 +394,42 @@ body {
 }
 
 @media (max-width: 768px) {
-  .maker_wrap {
+  .interface {
     padding: 0 10px;
   }
-  .thumb__text .text__main {
+  .interface__texts-main {
     font-size: 6.25vw;
   }
-  .thumb__text .text__sub {
+  .interface__texts-sub {
     font-size: 2.8646vw;
     margin-top: 4px;
     padding-top: 4px;
     border-top: 1px solid;
   }
-  .maker_wrap .maker__input {
+  .interface__setting {
     gap: 10px;
   }
-  .maker__input .input__main,
-  .maker__input .input__sub {
+  .interface__setting-main,
+  .interface__setting-sub {
     width: 100%;
     font-size: 14px;
   }
-  .lines {
+  .interface__line {
     display: block;
     width: 100%;
   }
-  .input__label {
+  .interface__label {
     font-size: 16px;
   }
-  .maker__input .input__range {
+  .interface__range {
     width: auto;
     margin: 10px 10px 0;
   }
-  .rdo__reverse {
+  .interface__reverse {
     width: auto;
     margin-top: 10px;
   }
-  .maker_wrap .maker__button {
+  .interface__btns {
     width: auto;
     margin-top: 16px;
   }
