@@ -10,7 +10,7 @@ export default function image(state = initialState, action) {
     case "ADD_IMAGES":
       return {
         search: action.search,
-        page: 1,
+        page: action.page,
         data: [...action.images],
         total_pages: action.total_pages,
       };

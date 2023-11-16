@@ -5,14 +5,27 @@ import ColumnContainer from "../component/ColumnContainer";
 import { useState } from "react";
 
 function Home() {
-  console.log("Home");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    is: false,
+    evt: "",
+  });
+  const [isEmpty, setIsEmpty] = useState(false);
 
   return (
     <Container>
       <Headline />
-      <SearchContainer loading={loading} setLoading={setLoading} />
-      <ColumnContainer loading={loading} setLoading={setLoading} />
+      <SearchContainer 
+        loading={loading} 
+        setLoading={setLoading} 
+        isEmpty={isEmpty}
+        setIsEmpty={setIsEmpty}
+      />
+      <ColumnContainer 
+        loading={loading} 
+        setLoading={setLoading}
+        isEmpty={isEmpty}
+        setIsEmpty={setIsEmpty}
+      />
     </Container>
   );
 }

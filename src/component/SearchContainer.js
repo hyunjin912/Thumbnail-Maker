@@ -1,11 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Search from "./Search";
 import { getImages } from "../api";
 
-export default function SearchContainer({ loading, setLoading }) {
-  console.log("SearchContainer");
+export default function SearchContainer({ loading, setLoading, setIsEmpty }) {
   const { page, search, data } = useSelector((state) => state.image);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,43 +14,55 @@ export default function SearchContainer({ loading, setLoading }) {
       e.preventDefault();
 
       const [inputEl] = e.target.children;
-      const search = inputEl.value.trim();
+      const inputValue = inputEl.value.trim();
       inputEl.blur();
-      console.log("submit - ", search, search.length);
-      if (search.length > 0) {
-        setLoading(true);
-        navigate(`/?search=${search}`);
-      } else {
-        navigate("/");
-      }
 
-      try {
-        const result = await getImages(search);
-        console.log("SC result - ", result);
+      if (search === inputValue) return;
 
-        dispatch({
-          type: "ADD_IMAGES",
-          search: search,
-          images: result.results,
-          total_pages: result.total_pages,
+      if (inputValue.length > 0) {
+        setIsEmpty(false);
+        setLoading({
+          is: true,
+          evt: "submit",
         });
+        dispatch({ type: "RESET_IMAGES" });
 
-        setLoading(false);
-      } catch (e) {
-        window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+        try {
+          const result = await getImages(inputValue);
+          const historyState = {
+            page: 1,
+            images: [...result.results],
+            total_pages: result.total_pages,
+            search: inputValue,
+          };
+          navigate(`/?search=${inputValue}`, { state: historyState });
+
+          dispatch({
+            type: "ADD_IMAGES",
+            search: inputValue,
+            page: 1,
+            images: result.results,
+            total_pages: result.total_pages,
+          });
+
+          setLoading({
+            is: false,
+            evt: "",
+          });
+
+          if (result.total <= 0) {
+            setIsEmpty(true);
+          }
+        } catch (e) {
+          window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
+          navigate("/");
+        }
+      } else {
         navigate("/");
       }
     },
     [search, data],
   );
 
-  return (
-    <Search
-      onSubmit={onSubmit}
-      dispatch={dispatch}
-      data={data}
-      loading={loading}
-      setLoading={setLoading}
-    />
-  );
+  return <Search onSubmit={onSubmit} setIsEmpty={setIsEmpty} />;
 }

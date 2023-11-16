@@ -1,13 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getImages } from "../api";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-function Serach({ onSubmit, dispatch }) {
-  console.log("Serach");
+function Serach({ onSubmit, setIsEmpty }) {
   const [input, setInput] = useState("");
-  const navigate = useNavigate();
-  const query = new URLSearchParams(useLocation().search).get("search");
+  const { state: locationState } = useLocation();
+  const dispatch = useDispatch();
 
   const onChange = useCallback((e) => {
     setInput(e.target.value);
@@ -20,32 +19,25 @@ function Serach({ onSubmit, dispatch }) {
   }, []);
 
   useEffect(() => {
-    if (query === null) {
-      console.log("이게 동작하나11111");
+    setIsEmpty(false);
+
+    if (locationState === null) {
       setInput("");
       dispatch({ type: "RESET_IMAGES" });
     } else {
-      console.log("이게 동작하나222222");
-
-      const reloadData = async () => {
-        try {
-          const result = await getImages(query);
-          dispatch({
-            type: "ADD_IMAGES",
-            search: query,
-            images: result.results,
-            total_pages: result.total_pages,
-          });
-        } catch (e) {
-          window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
-          navigate("/");
-        }
-      };
-
-      setInput(query);
-      reloadData();
+      setInput(locationState.search);
+      dispatch({
+        type: "ADD_IMAGES",
+        search: locationState.search,
+        page: locationState.page,
+        images: locationState.images,
+        total_pages: locationState.total_pages,
+      });
+      if (locationState.total_pages <= 0) {
+        setIsEmpty(true);
+      }
     }
-  }, [query]);
+  }, [locationState]);
 
   return (
     <Wrap>

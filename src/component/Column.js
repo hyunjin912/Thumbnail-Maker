@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Maker from "./Maker";
 import styled from "styled-components";
 
@@ -36,7 +35,6 @@ function ColumnList({ className, imgs }) {
 }
 
 function Column({ data, column }) {
-  console.log("Column");
   const columns = [];
   for (let i = 1; i <= column; i++) {
     columns.push({
@@ -63,6 +61,7 @@ const Wrap = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
+  padding-bottom: 20px;
 
   img {
     max-width: 100%;
@@ -71,6 +70,7 @@ const Wrap = styled.div`
 `;
 
 const ColumnListWrap = styled.div`
+  width: 50%;
   display: flex;
   flex-direction: column;
   gap: 10px;

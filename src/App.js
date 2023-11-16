@@ -4,7 +4,6 @@ import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 
 function App() {
-  console.log("App Comp");
   return (
     <Routes>
       <Route path="/" element={<Home />} />

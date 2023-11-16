@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Spinner from "./Spinner";
 import { getImage } from "../api";
 import styled, { css, keyframes } from "styled-components";
@@ -38,14 +38,14 @@ function Maker({ id, setOpen }) {
   });
   const [trigger, setTrigger] = useState(false);
   const preview = useRef(null);
-  const onReverse = (e) => {
+  const onReverse = useCallback((e) => {
     const { value } = e.target;
     setInput((prev) => ({
       ...prev,
       reverse: value,
     }));
-  };
-  const onTriggerStart = (e) => {
+  }, []);
+  const onTriggerStart = useCallback((e) => {
     if ("ontouchstart" in window && e.type === "mousedown") return;
     setTrigger(true);
     const leftAndOpaticy = calc(e);
@@ -53,22 +53,25 @@ function Maker({ id, setOpen }) {
       ...prev,
       ...leftAndOpaticy,
     }));
-  };
-  const onMove = (e) => {
-    if ("ontouchmove" in window && e.type === "mousemove") return;
-    if (trigger) {
-      const leftAndOpaticy = calc(e);
-      setInput((prev) => ({
-        ...prev,
-        ...leftAndOpaticy,
-      }));
-    }
-  };
-  const onTriggerStop = (e) => {
+  }, []);
+  const onMove = useCallback(
+    (e) => {
+      if ("ontouchmove" in window && e.type === "mousemove") return;
+      if (trigger) {
+        const leftAndOpaticy = calc(e);
+        setInput((prev) => ({
+          ...prev,
+          ...leftAndOpaticy,
+        }));
+      }
+    },
+    [trigger],
+  );
+  const onTriggerStop = useCallback((e) => {
     if ("ontouchend" in window && e.type === "mouseup") return;
     setTrigger(false);
-  };
-  const onReset = () => {
+  }, []);
+  const onReset = useCallback(() => {
     setInput({
       main: "",
       sub: "",
@@ -76,19 +79,19 @@ function Maker({ id, setOpen }) {
       left: 0,
       reverse: "false",
     });
-  };
-  const onChange = (e) => {
+  }, []);
+  const onChange = useCallback((e) => {
     const { name, value } = e.target;
 
-    setInput({
-      ...input,
+    setInput((prev) => ({
+      ...prev,
       [name]: value,
-    });
-  };
-  const onClose = () => {
+    }));
+  }, []);
+  const onClose = useCallback(() => {
     setOpen(false);
-  };
-  const onDownload = async () => {
+  }, []);
+  const onDownload = useCallback(async () => {
     if (image.src.length <= 0) return;
     setMakingCanvas(true);
 
@@ -105,11 +108,9 @@ function Maker({ id, setOpen }) {
     // win.document.write(`<img src=${canvas.toDataURL("image/png")}>`);
 
     setMakingCanvas(false);
-  };
+  }, [image, makingCanvas]);
 
   useEffect(() => {
-    console.log("thumb Effect");
-
     document.body.style.overflow = "hidden";
 
     const fetchData = async () => {
@@ -118,7 +119,6 @@ function Maker({ id, setOpen }) {
         const img = new Image();
         img.src = re.urls.full;
         img.onload = () => {
-          console.log("썸브 로딩 완료");
           setImage({
             src: re.urls.full,
             alt: re.alt_description,
@@ -139,11 +139,6 @@ function Maker({ id, setOpen }) {
 
   return (
     <>
-      {/* <Wrap>
-        <ThumbWrap>
-          <Thumb $url={img.src} />
-        </ThumbWrap>
-      </Wrap> */}
       <SpinnerWrap $makingCanvas={makingCanvas}>
         <Spinner />
       </SpinnerWrap>
@@ -155,7 +150,9 @@ function Maker({ id, setOpen }) {
         <div className="interface__inner">
           <div
             ref={preview}
-            className={image.src ? "interface__preview" : "interface__preview skeleton"}
+            className={
+              image.src ? "interface__preview" : "interface__preview skeleton"
+            }
           >
             <span
               className="interface__preview-glass"
@@ -188,9 +185,13 @@ function Maker({ id, setOpen }) {
                 autoComplete="off"
               />
               <div className="interface__line interface__line-opacity">
-                <div className="interface__label interface__label-opacity">배경 명암</div>
+                <div className="interface__label interface__label-opacity">
+                  배경 명암
+                </div>
                 <div
-                  className={trigger ? "interface__range dimmed" : "interface__range"}
+                  className={
+                    trigger ? "interface__range dimmed" : "interface__range"
+                  }
                   onMouseDown={onTriggerStart}
                   onMouseMove={onMove}
                   onMouseUp={onTriggerStop}
@@ -211,7 +212,9 @@ function Maker({ id, setOpen }) {
                 </div>
               </div>
               <div className="interface__line interface__line-reverse">
-                <div className="interface__label interface__label-reverse">색상 반전</div>
+                <div className="interface__label interface__label-reverse">
+                  색상 반전
+                </div>
                 <div className="interface__reverse">
                   <input
                     type="radio"
@@ -222,7 +225,9 @@ function Maker({ id, setOpen }) {
                     onChange={onReverse}
                     checked={input.reverse === "true"}
                   />
-                  <label htmlFor="rdo1" className="interface__rdo-label">사용</label>
+                  <label htmlFor="rdo1" className="interface__rdo-label">
+                    사용
+                  </label>
                   <input
                     type="radio"
                     id="rdo2"
@@ -232,7 +237,9 @@ function Maker({ id, setOpen }) {
                     onChange={onReverse}
                     checked={input.reverse === "false"}
                   />
-                  <label htmlFor="rdo2" className="interface__rdo-label">미사용</label>
+                  <label htmlFor="rdo2" className="interface__rdo-label">
+                    미사용
+                  </label>
                 </div>
               </div>
             </div>
@@ -243,10 +250,16 @@ function Maker({ id, setOpen }) {
             </div>
           </div>
           <div className="interface__btns">
-            <button className="interface__btn interface__close" onClick={onClose}>
+            <button
+              className="interface__btn interface__close"
+              onClick={onClose}
+            >
               Close
             </button>
-            <button className="interface__btn interface__download" onClick={onDownload}>
+            <button
+              className="interface__btn interface__download"
+              onClick={onDownload}
+            >
               Download
             </button>
           </div>
@@ -272,77 +285,5 @@ const SpinnerWrap = styled.div`
   z-index: 99999;
   background: rgba(0, 0, 0, 0.5);
 `;
-
-const sk = () => {
-  const skeleton_loader = keyframes`
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-`;
-
-  const animation = css`
-    ${skeleton_loader} 2s infinite;
-  `;
-
-  const skeleton = css`
-    overflow: hidden;
-    background-color: #fdc000;
-    &::after {
-      content: "";
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-image: linear-gradient(
-        270deg,
-        rgba(255, 255, 255, 0),
-        rgba(243, 133, 24, 0.7),
-        rgba(255, 255, 255, 0)
-      );
-      transform: translateX(-100%);
-    }
-  `;
-
-  const Wrap = styled.div`
-    padding: 20px;
-  `;
-
-  const ThumbWrap = styled.div`
-    position: relative;
-    box-sizing: border-box;
-    max-width: 788px;
-    margin: 0 auto;
-
-    &::after {
-      content: "";
-      display: block;
-      padding-top: 56.25%;
-    }
-  `;
-
-  const Thumb = styled.div`
-    position: absolute;
-    inset: 0;
-
-    ${(props) =>
-      props.$url
-        ? css`
-            background: url(${props.$url}) center center / cover;
-          `
-        : skeleton}
-    ${(props) =>
-      props.$url
-        ? ""
-        : css`
-            &::after {
-              animation: ${animation};
-            }
-          `}
-  `;
-};
 
 export default Maker;

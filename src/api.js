@@ -5,8 +5,6 @@ export async function getImages(search, page = 1) {
     `https://api.unsplash.com/search/photos/?client_id=${cid}&query=${search}&page=${page}&orientation=landscape&per_page=30&lang=ko`,
   );
   const result = await data.json();
-  console.log("api - result, search", result, search);
-
   return result;
 }
 
@@ -15,6 +13,5 @@ export async function getImage(thumbId) {
     `https://api.unsplash.com/photos/${thumbId}?client_id=${cid}`,
   );
   const result = await data.json();
-  console.log("썸브 완료");
   return result;
 }

@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Column from "./Column";
 import Spinner from "./Spinner";
 import { getImages } from "../api";
 import { useNavigate } from "react-router-dom";
 
-export default function ColumnContainer({ loading, setLoading }) {
-  console.log("ColumnContainer");
+const msg = {
+  empty: "검색된 결과가 없습니다.",
+};
+
+export default function ColumnContainer({ loading, setLoading, isEmpty }) {
   const navigate = useNavigate();
   const { page, search, data, total_pages } = useSelector(
     (state) => state.image,
@@ -15,21 +18,6 @@ export default function ColumnContainer({ loading, setLoading }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const div = document.createElement("div");
-    div.classList.add("hj");
-    div.style.width = "400px";
-    div.style.background = "red";
-    div.style.color = "#fff";
-    div.style.fontSize = "12vw";
-    div.style.fontWeight = "bold";
-    div.style.position = "fixed";
-    div.style.zIndex = 99999999;
-    // document.body.insertAdjacentElement("afterbegin", div);
-  }, []);
-
-  useEffect(() => {
-    console.log("마운트");
-
     let timer = null;
     let onScroll = null;
     const throttle = (delay, func) => {
@@ -46,34 +34,44 @@ export default function ColumnContainer({ loading, setLoading }) {
     };
 
     const viewportHeight = document.body.offsetHeight;
-    // const viewportHeight = window.innerHeight;
 
-    if (loading) {
+    if (loading.is && loading.evt === "scroll") {
       window.scrollTo(0, document.body.scrollHeight - viewportHeight);
     }
 
     window.addEventListener(
       "scroll",
       throttle(500, async () => {
-        // document.querySelector(".hj").innerHTML = `현재스크롤 : ${Math.ceil(
-        //   window.scrollY,
-        // )}<br />
-        // 총스크롤 : ${Math.floor(document.body.scrollHeight - viewportHeight)}
-        // `;
-
         if (
           Math.ceil(window.scrollY) >=
-          Math.floor(document.body.scrollHeight - viewportHeight)
+          Math.floor(
+            (document.body.scrollHeight - document.body.offsetHeight) * 0.99,
+          )
         ) {
-          if (loading || data.length === 0 || total_pages <= page) {
+          if (loading.is || data.length === 0 || total_pages <= page) {
             return;
           }
-          console.log("지금!! - ", loading, search, data);
-          setLoading(true);
+          setLoading({
+            is: true,
+            evt: "scroll",
+          });
 
           try {
             const result = await getImages(search, page + 1);
-            setLoading(false);
+            const historyState = {
+              page: page + 1,
+              images: [...data, ...result.results],
+              total_pages: result.total_pages,
+              search,
+            };
+            navigate(`/?search=${search}`, {
+              state: historyState,
+              replace: true,
+            });
+            setLoading({
+              is: false,
+              evt: "",
+            });
             dispatch({
               type: "UPDATE_IMAGES",
               images: result.results,
@@ -91,8 +89,6 @@ export default function ColumnContainer({ loading, setLoading }) {
     );
 
     return () => {
-      console.log("언 마운트");
-
       window.removeEventListener("scroll", onScroll);
     };
   }, [page, loading, data]);
@@ -100,7 +96,8 @@ export default function ColumnContainer({ loading, setLoading }) {
   return (
     <>
       <Column data={data} column={column} />
-      {loading ? <Spinner /> : null}
+      {loading.is ? <Spinner /> : null}
+      {isEmpty && msg.empty}
     </>
   );
 }
