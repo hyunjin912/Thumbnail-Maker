@@ -1,23 +1,38 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Maker from "./Maker";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 function ColumnItem({ img }) {
   const [open, setOpen] = useState(false);
+  const [image, setImage] = useState(false);
   const {
     urls: { regular },
     alt_description,
     id,
   } = img;
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
+
+  useEffect(() => {
+    const imgElem = new Image();
+
+    imgElem.src = regular;
+    imgElem.onload = () => {
+      setImage(true);
+    };
+  }, []);
 
   return (
     <>
-      <ColumnItemWrap data-id={id} onClick={onClick}>
-        <img src={regular} alt={alt_description} />
+      <ColumnItemWrap
+        data-id={id}
+        onClick={onClick}
+        $image={image}
+        className={image ? "123" : "skeleton"}
+      >
+        {image && <img src={regular} alt={alt_description} />}
       </ColumnItemWrap>
       {open && <Maker id={id} setOpen={setOpen} />}
     </>
@@ -80,12 +95,24 @@ const ColumnItemWrap = styled.div`
   position: relative;
   cursor: pointer;
 
-  &:hover::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
+  ${(props) =>
+    props.$image
+      ? css`
+          &:hover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+          }
+        `
+      : css`
+          &::before {
+            content: "";
+            background: #fdc000;
+            display: block;
+            padding-top: 70%;
+          }
+        `}
 `;
 
 export default Column;

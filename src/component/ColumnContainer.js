@@ -12,12 +12,13 @@ const msg = {
 export default function ColumnContainer({ loading, setLoading, isEmpty }) {
   const navigate = useNavigate();
   const { page, search, data, total_pages } = useSelector(
-    (state) => state.image,
+    (state) => state.image
   );
   const column = useSelector((state) => state.column);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(loading);
     let timer = null;
     let onScroll = null;
     const throttle = (delay, func) => {
@@ -35,17 +36,13 @@ export default function ColumnContainer({ loading, setLoading, isEmpty }) {
 
     const viewportHeight = document.body.offsetHeight;
 
-    if (loading.is && loading.evt === "scroll") {
-      window.scrollTo(0, document.body.scrollHeight - viewportHeight);
-    }
-
     window.addEventListener(
       "scroll",
       throttle(500, async () => {
         if (
           Math.ceil(window.scrollY) >=
           Math.floor(
-            (document.body.scrollHeight - document.body.offsetHeight) * 0.99,
+            (document.body.scrollHeight - document.body.offsetHeight) * 0.99
           )
         ) {
           if (loading.is || data.length === 0 || total_pages <= page) {
@@ -80,12 +77,12 @@ export default function ColumnContainer({ loading, setLoading, isEmpty }) {
             });
           } catch (e) {
             window.alert(
-              "예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.",
+              "예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다."
             );
             navigate("/");
           }
         }
-      }),
+      })
     );
 
     return () => {
