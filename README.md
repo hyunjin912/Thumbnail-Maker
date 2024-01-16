@@ -14,7 +14,7 @@ Unsplash API와 html2canvas를 이용해 블로그나 PPT 대표 사진에 사�
 
 - **React**
 
-  게임의 화면이 전환될 때 깜빡임이 없도록 SPA로 만들 필요가 있었고, Javascript 문법이 익숙하였기에 자체적인 문법이 있는 Vue, Angular보다는 React를 사용하였습니다. 또한 React의 사용자가 많으므로 개발하는 과정에서 생기는 문제들을 해결하기에 더욱 용이할 것으로 생각하였습니다.
+  Javascript 문법이 익숙하였기에 자체적인 문법이 있는 Vue, Angular보다는 React를 사용하였습니다. 또한 React의 사용자가 많으므로 개발하는 과정에서 생기는 문제들을 해결하기에 더욱 용이할 것으로 생각하였습니다.
 
 - **Html2canvas**
 
