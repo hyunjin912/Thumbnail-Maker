@@ -12,7 +12,7 @@ function calc(e) {
   const range = (Math.floor(clientX) - exCludeVal) / wid;
   const leftValue = Math.min(
     wid,
-    Math.max(0, Math.floor(clientX) - exCludeVal),
+    Math.max(0, Math.floor(clientX) - exCludeVal)
   );
   const opacityValue = Math.min(1, Math.max(0, range));
 
@@ -65,7 +65,7 @@ function Maker({ id, setOpen }) {
         }));
       }
     },
-    [trigger],
+    [trigger]
   );
   const onTriggerStop = useCallback((e) => {
     if ("ontouchend" in window && e.type === "mouseup") return;
@@ -98,14 +98,13 @@ function Maker({ id, setOpen }) {
     const opt = {
       allowTaint: true,
       useCORS: true,
+      scale: 2,
     };
     const canvas = await html2canvas(preview.current, opt);
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
     a.download = "maker.png";
     a.click();
-    // const win = window.open();
-    // win.document.write(`<img src=${canvas.toDataURL("image/png")}>`);
 
     setMakingCanvas(false);
   }, [image, makingCanvas]);
@@ -118,7 +117,10 @@ function Maker({ id, setOpen }) {
         const re = await getImage(id);
         const img = new Image();
         img.src = re.urls.full;
+        img.setAttribute("alt", re.alt_description);
         img.onload = () => {
+          if (!preview.current) return;
+          preview.current.insertAdjacentElement("afterbegin", img);
           setImage({
             src: re.urls.full,
             alt: re.alt_description,
@@ -158,7 +160,6 @@ function Maker({ id, setOpen }) {
               className="interface__preview-glass"
               style={{ opacity: input.opacity }}
             ></span>
-            {image.src && <img src={image.src} alt={image.alt} />}
             <ul className="interface__texts">
               <li className="interface__texts-main">{input.main}</li>
               <li className="interface__texts-sub">{input.sub}</li>

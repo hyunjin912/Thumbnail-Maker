@@ -18,7 +18,6 @@ export default function ColumnContainer({ loading, setLoading, isEmpty }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(loading);
     let timer = null;
     let onScroll = null;
     const throttle = (delay, func) => {
