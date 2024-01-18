@@ -35,7 +35,9 @@ export default function SearchContainer({ loading, setLoading, setIsEmpty }) {
             total_pages: result.total_pages,
             search: inputValue,
           };
-          navigate(`/?search=${inputValue}`, { state: historyState });
+          navigate(`/p_thumbnail-maker/?search=${inputValue}`, {
+            state: historyState,
+          });
 
           dispatch({
             type: "ADD_IMAGES",
@@ -55,13 +57,13 @@ export default function SearchContainer({ loading, setLoading, setIsEmpty }) {
           }
         } catch (e) {
           window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
-          navigate("/");
+          navigate("/p_thumbnail-maker");
         }
       } else {
-        navigate("/");
+        navigate("/p_thumbnail-maker");
       }
     },
-    [search, data],
+    [search, data]
   );
 
   return <Search onSubmit={onSubmit} setIsEmpty={setIsEmpty} />;

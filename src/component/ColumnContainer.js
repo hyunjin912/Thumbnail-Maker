@@ -60,7 +60,7 @@ export default function ColumnContainer({ loading, setLoading, isEmpty }) {
               total_pages: result.total_pages,
               search,
             };
-            navigate(`/?search=${search}`, {
+            navigate(`/p_thumbnail-maker/?search=${search}`, {
               state: historyState,
               replace: true,
             });
@@ -78,7 +78,7 @@ export default function ColumnContainer({ loading, setLoading, isEmpty }) {
             window.alert(
               "예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다."
             );
-            navigate("/");
+            navigate("/p_thumbnail-maker");
           }
         }
       })

@@ -6,8 +6,8 @@ import NotFound from "./routes/NotFound";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/*" element={<NotFound />} />
+      <Route path="/p_thumbnail-maker" element={<Home />} />
+      <Route path="/p_thumbnail-maker/*" element={<NotFound />} />
     </Routes>
   );
 }

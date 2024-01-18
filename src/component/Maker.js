@@ -5,23 +5,6 @@ import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 
-function calc(e) {
-  const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
-  const wid = Math.floor(e.currentTarget.getBoundingClientRect().width);
-  const clientX = "ontouchstart" in window ? e.touches[0].clientX : e.clientX;
-  const range = (Math.floor(clientX) - exCludeVal) / wid;
-  const leftValue = Math.min(
-    wid,
-    Math.max(0, Math.floor(clientX) - exCludeVal)
-  );
-  const opacityValue = Math.min(1, Math.max(0, range));
-
-  return {
-    opacity: opacityValue.toFixed(2) * 1,
-    left: (leftValue / wid) * 100,
-  };
-}
-
 function Maker({ id, setOpen }) {
   const navigate = useNavigate();
   const [makingCanvas, setMakingCanvas] = useState(false);
@@ -38,6 +21,24 @@ function Maker({ id, setOpen }) {
   });
   const [trigger, setTrigger] = useState(false);
   const preview = useRef(null);
+
+  const calc = useCallback((e) => {
+    const isMobile = "touches" in e;
+    const exCludeVal = Math.floor(e.currentTarget.getBoundingClientRect().left);
+    const wid = Math.floor(e.currentTarget.getBoundingClientRect().width);
+    const clientX = isMobile ? e.touches[0].clientX : e.clientX;
+    const range = (Math.floor(clientX) - exCludeVal) / wid;
+    const leftValue = Math.min(
+      wid,
+      Math.max(0, Math.floor(clientX) - exCludeVal)
+    );
+    const opacityValue = Math.min(1, Math.max(0, range));
+
+    return {
+      opacity: opacityValue.toFixed(2) * 1,
+      left: (leftValue / wid) * 100,
+    };
+  }, []);
   const onReverse = useCallback((e) => {
     const { value } = e.target;
     setInput((prev) => ({
@@ -46,7 +47,7 @@ function Maker({ id, setOpen }) {
     }));
   }, []);
   const onTriggerStart = useCallback((e) => {
-    if ("ontouchstart" in window && e.type === "mousedown") return;
+    if ("touches" in e && e.type === "mousedown") return;
     setTrigger(true);
     const leftAndOpaticy = calc(e);
     setInput((prev) => ({
@@ -56,7 +57,7 @@ function Maker({ id, setOpen }) {
   }, []);
   const onMove = useCallback(
     (e) => {
-      if ("ontouchmove" in window && e.type === "mousemove") return;
+      if ("touches" in e && e.type === "mousemove") return;
       if (trigger) {
         const leftAndOpaticy = calc(e);
         setInput((prev) => ({
@@ -68,7 +69,7 @@ function Maker({ id, setOpen }) {
     [trigger]
   );
   const onTriggerStop = useCallback((e) => {
-    if ("ontouchend" in window && e.type === "mouseup") return;
+    if ("touches" in e && e.type === "mouseup") return;
     setTrigger(false);
   }, []);
   const onReset = useCallback(() => {
@@ -128,7 +129,7 @@ function Maker({ id, setOpen }) {
         };
       } catch (e) {
         window.alert("예기치 못한 에러가 발생하여 메인 화면으로 이동됩니다.");
-        navigate("/");
+        navigate("/p_thumbnail-maker");
       }
     };
 

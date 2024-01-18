@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 function NotFound() {
   const navigate = useNavigate();
   const onClick = () => {
-    navigate("/");
+    navigate("/p_thumbnail-maker");
   };
   return (
     <>
