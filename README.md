@@ -26,7 +26,7 @@ Unsplash API와 html2canvas를 이용해 블로그나 PPT 대표 사진에 사�
 
 ## 배운 점
 
-- redux, styled-components의 사용법
+- styled-components의 사용법
 
 ## Demo
 
